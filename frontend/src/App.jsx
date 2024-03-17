@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import Form from "./components/Form";
 import "./App.css";
-
+import customFetch from "./utilis";
 function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/tasks", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await res.json();
+        const { data } = await customFetch.get("/");
+
         console.log(data);
       } catch (err) {
         console.log(err);
@@ -21,9 +16,10 @@ function App() {
     fetchData();
   }, []);
   return (
-    <>
+    <main>
       <h1>works</h1>
-    </>
+      <Form />
+    </main>
   );
 }
 
