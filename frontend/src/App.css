@@ -46,3 +46,9 @@ main {
   max-width: 800px;
   margin: 0 auto;
 }
+.hidden {
+  display: none;
+}
+.show {
+  display: block;
+}

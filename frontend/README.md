@@ -15,3 +15,11 @@ export default customFetch;
 ```js
 const { data } = await customFetch.get("/");
 ```
+
+### useQuery mutation
+
+```js
+const { mutate: createTask, isLoading } = useMutation({
+    mutationFn: (text) => customFetch.post("/", { title: text })
+    )},
+```
