@@ -1,32 +1,9 @@
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import customFetch from "../utilis";
-import { toast } from "react-toastify";
-const Item = ({ id, title, isDone }) => {
-  const queryClient = useQueryClient();
+import { useEditTask, useDeleteTask } from "./reactQueryCustomHooks";
 
-  const { mutate: deleteTask, isLoading } = useMutation({
-    mutationFn: (id) => customFetch.delete(`/${id}`),
-    onError: (err) => {
-      console.log(err);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      console.log(data);
-      toast.success("item removed");
-    },
-  });
-  const { mutate: editTask, isLoading: loading } = useMutation({
-    mutationFn: ({ id, isDone }) => customFetch.patch(`/${id}`, { isDone }),
-    onError: (err) => {
-      console.log(err);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      console.log(data);
-      toast.success("item updated");
-    },
-  });
+const Item = ({ id, title, isDone }) => {
+  const { editTask } = useEditTask();
+  const { deleteTask } = useDeleteTask();
   const handleCheckbox = (e, id) => {
     editTask({ id, isDone: !isDone });
     console.log(e.target.checked);
