@@ -4,7 +4,7 @@ import customFetch from "../utilis";
 import { toast } from "react-toastify";
 const Item = ({ id, title, isDone }) => {
   const queryClient = useQueryClient();
-  const [done, setDone] = useState(false);
+
   const { mutate: deleteTask, isLoading } = useMutation({
     mutationFn: (id) => customFetch.delete(`/${id}`),
     onError: (err) => {
@@ -16,8 +16,20 @@ const Item = ({ id, title, isDone }) => {
       toast.success("item removed");
     },
   });
-  const handleCheckbox = (id) => {
-    console.log(id);
+  const { mutate: editTask, isLoading: loading } = useMutation({
+    mutationFn: ({ id, isDone }) => customFetch.patch(`/${id}`, { isDone }),
+    onError: (err) => {
+      console.log(err);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      console.log(data);
+      toast.success("item updated");
+    },
+  });
+  const handleCheckbox = (e, id) => {
+    editTask({ id, isDone: !isDone });
+    console.log(e.target.checked);
   };
   const hanldeDelete = (id) => {
     console.log(id);
@@ -26,7 +38,7 @@ const Item = ({ id, title, isDone }) => {
   return (
     <div className="list-item flex-space">
       <input
-        onChange={() => handleCheckbox(id)}
+        onChange={(e) => handleCheckbox(e, id)}
         checked={isDone}
         type="checkbox"
         name=""

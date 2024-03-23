@@ -1,14 +1,10 @@
 import React from "react";
 import Item from "./Item";
-import { useQuery } from "@tanstack/react-query";
-import customFetch from "../utilis";
+import { useFetchTasks } from "./reactQueryCustomHooks";
 const Items = () => {
-  const { isLoading, data, error, isError } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: () => customFetch.get("/"),
-  });
-  console.log(isError, error);
-  if (isError) {
+  const { data, isLoading, isError: error } = useFetchTasks();
+  console.log(data);
+  if (error) {
     return <p> {error.message}</p>;
   }
   if (isLoading) {
@@ -16,7 +12,7 @@ const Items = () => {
   }
   return (
     <div className="items">
-      {data.data.taskList.map((item) => (
+      {data.taskList.map((item) => (
         <Item key={item.id} {...item} />
       ))}
     </div>

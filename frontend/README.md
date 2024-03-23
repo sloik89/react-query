@@ -22,4 +22,13 @@ const { data } = await customFetch.get("/");
 const { mutate: createTask, isLoading } = useMutation({
     mutationFn: (text) => customFetch.post("/", { title: text })
     )},
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      toast.success("item added");
+      setTextField("");
+    },
+      });
 ```
